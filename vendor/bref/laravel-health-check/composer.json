@@ -1,0 +1,36 @@
+{
+    "name": "bref/laravel-health-check",
+    "description": "Bref health checks for Laravel applications",
+    "keywords": [],
+    "license": "MIT",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Bref\\LaravelHealthCheck\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bref\\LaravelHealthCheck\\Test\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "illuminate/console": "^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "illuminate/contracts": "^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "illuminate/database": "^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "illuminate/http": "^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "illuminate/support": "^8.0 || ^9.0 || ^10.0 || ^11.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "phpstan/phpstan": "^1"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bref\\LaravelHealthCheck\\BrefHealthCheckServiceProvider"
+            ]
+        }
+    }
+}

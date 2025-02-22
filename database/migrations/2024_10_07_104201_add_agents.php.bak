@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('agents', function (Blueprint $table) {
+            $table->enum('activation_mode', ['always', 'keywords'])->default('always')->after('custom_instructions');
+            $table->json('keywords')->nullable()->after('activation_mode');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('agents', function (Blueprint $table) {
+            $table->dropColumn(['activation_mode', 'keywords']);
+        });
+    }
+};

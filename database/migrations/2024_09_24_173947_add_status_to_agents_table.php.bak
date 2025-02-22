@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddStatusToAgentsTable extends Migration
+{
+    public function up()
+    {
+        // Verificamos fuera del callback
+        if (!Schema::hasColumn('agents', 'status')) {
+            Schema::table('agents', function (Blueprint $table) {
+                $table->tinyInteger('status')->default(1)->after('custom_instructions');
+            });
+        }
+    }
+
+    public function down()
+    {
+        if (Schema::hasColumn('agents', 'status')) {
+            Schema::table('agents', function (Blueprint $table) {
+                $table->dropColumn('status');
+            });
+        }
+    }
+}
