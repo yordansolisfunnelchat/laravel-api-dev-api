@@ -1006,6 +1006,7 @@ class ComposerStaticInit957ef4c345ca28ca5a3245bfaf56af37
         'App\\Jobs\\ProcessDelayedMessages' => __DIR__ . '/../..' . '/app/Jobs/ProcessDelayedMessages.php',
         'App\\Jobs\\ProcessPythonResponse' => __DIR__ . '/../..' . '/app/Jobs/ProcessPythonResponse.php',
         'App\\Jobs\\SendScheduledMessage' => __DIR__ . '/../..' . '/app/Jobs/SendScheduledMessage.php',
+        'App\\Jobs\\SyncAgentWithFastAPI' => __DIR__ . '/../..' . '/app/Jobs/SyncAgentWithFastAPI.php',
         'App\\Listeners\\SendPausedNotificationListener' => __DIR__ . '/../..' . '/app/Listeners/SendPausedNotificationListener.php',
         'App\\Mail\\DelayedPaymentEmail' => __DIR__ . '/../..' . '/app/Mail/DelayedPaymentEmail.php',
         'App\\Mail\\SubscriptionCancelledEmail' => __DIR__ . '/../..' . '/app/Mail/SubscriptionCancelledEmail.php',

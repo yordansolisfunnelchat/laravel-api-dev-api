@@ -109,6 +109,7 @@ return array(
     'App\\Jobs\\ProcessDelayedMessages' => $baseDir . '/app/Jobs/ProcessDelayedMessages.php',
     'App\\Jobs\\ProcessPythonResponse' => $baseDir . '/app/Jobs/ProcessPythonResponse.php',
     'App\\Jobs\\SendScheduledMessage' => $baseDir . '/app/Jobs/SendScheduledMessage.php',
+    'App\\Jobs\\SyncAgentWithFastAPI' => $baseDir . '/app/Jobs/SyncAgentWithFastAPI.php',
     'App\\Listeners\\SendPausedNotificationListener' => $baseDir . '/app/Listeners/SendPausedNotificationListener.php',
     'App\\Mail\\DelayedPaymentEmail' => $baseDir . '/app/Mail/DelayedPaymentEmail.php',
     'App\\Mail\\SubscriptionCancelledEmail' => $baseDir . '/app/Mail/SubscriptionCancelledEmail.php',

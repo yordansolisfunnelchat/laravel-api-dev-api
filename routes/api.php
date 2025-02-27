@@ -20,6 +20,8 @@ use App\Http\Controllers\AgentMappingController; //✅
 use App\Http\Controllers\TestInstanceController; //🐍
 use App\Http\Controllers\WhatsAppInstanceController;
 
+use App\Http\Controllers\EvolutionApiValueController;
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -92,10 +94,10 @@ Route::middleware(['web'])->group(function () {
 
 
 // Rutas para test instances  ✅
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/test-instances', [TestInstanceController::class, 'store']);
-    Route::get('/test-instances', [TestInstanceController::class, 'index']);
-});
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/test-instances', [TestInstanceController::class, 'store']);
+//     Route::get('/test-instances', [TestInstanceController::class, 'index']);
+// });
 
 
 
@@ -107,25 +109,72 @@ Route::post('/python-callback', [WebhookController::class, 'handlePythonCallback
 // Ruta para crear agentes  ✅
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('v1/agents')->group(function () {
-        Route::post('/', [AgentIntegrationController::class, 'store']);# funciona 
-        Route::put('/{id}/instance', [AgentMappingController::class, 'update']);
-        Route::get('/{agent}/sync-status', [AgentIntegrationController::class, 'checkSyncStatus']);
-        Route::post('/{agent}/retry-sync', [AgentIntegrationController::class, 'retrySyncWithFastAPI']);
-        Route::put('/{id}', [AgentCRUDController::class, 'update']);
-        Route::delete('/{id}', [AgentCRUDController::class, 'destroy']);
+    Route::get('/all', [AgentIntegrationController::class, 'index']);
+    Route::post('/', [AgentIntegrationController::class, 'store']);# funciona 
+    Route::put('/{id}/instance', [AgentMappingController::class, 'update']);
+    Route::get('/{agent}/sync-status', [AgentIntegrationController::class, 'checkSyncStatus']);
+    Route::post('/{agent}/retry-sync', [AgentIntegrationController::class, 'retrySyncWithFastAPI']);
+    Route::put('/update/{id}', [AgentCRUDController::class, 'update']);
+    Route::delete('/{id}', [AgentCRUDController::class, 'destroy']);
     });
 });
 
 
+// Webhook route - No requiere autenticación sanctum ya que será llamado por FastAPI
+Route::post('v1/agents/webhook/fastapi', [AgentIntegrationController::class, 'handleFastAPICallback']);
+
+
+
+Route::prefix('agents')->group(function () {
+    Route::post('/', [AgentIntegrationController::class, 'store']);
+    Route::get('/sync/{agentId}', [AgentIntegrationController::class, 'checkSyncStatus'])->name('agents.sync.status');
+    Route::post('/sync/{agentId}/retry', [AgentIntegrationController::class, 'retrySyncWithFastAPI'])->name('agents.sync.retry');
+    
+    // Webhook para recibir notificaciones desde FastAPI
+    Route::post('/webhook/fastapi', [AgentIntegrationController::class, 'handleFastAPICallback']);
+});
 
 
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('whatsapp')->group(function () {
-        Route::get('/instances', [WhatsAppInstanceController::class, 'index']);
+        // Route::get('/instances', [WhatsAppInstanceController::class, 'index']);
         Route::post('/instances', [WhatsAppInstanceController::class, 'store']);
-        Route::get('/instances/{instanceName}', [WhatsAppInstanceController::class, 'show']);
-        Route::put('/instances/{instanceName}', [WhatsAppInstanceController::class, 'update']);
-        Route::delete('/instances/{instanceName}', [WhatsAppInstanceController::class, 'destroy']);
+        Route::get('/instances/{user_id}', [WhatsAppInstanceController::class, 'show']);
+        Route::put('/instances/{instance_id}', [WhatsAppInstanceController::class, 'update']);
+        // Route::delete('/instances/{instanceName}', [WhatsAppInstanceController::class, 'destroy']);
     });
 });
+
+
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::prefix('evolution-api')->group(function () {
+//         Route::get('/all', [EvolutionApiValueController::class, 'index']);
+//         Route::post('/create/value-key', [EvolutionApiValueController::class, 'store']);
+//         Route::get('/get-config/{user_id}', [EvolutionApiValueController::class, 'show']);
+//         Route::put('/update/{instance_id}', [EvolutionApiValueController::class, 'update']);
+//         Route::delete('/key_value/{id_key}', [EvolutionApiValueController::class, 'destroy']);
+//     });
+// });
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('evolution-api')->group(function () {
+        // Listar todas las configuraciones
+        Route::get('/configs', [EvolutionApiValueController::class, 'index']);
+        
+        // Crear una nueva configuración
+        Route::post('/configs', [EvolutionApiValueController::class, 'store']);
+        
+        // Obtener una configuración específica por ID
+        Route::get('/configs/{id}', [EvolutionApiValueController::class, 'show']);
+        
+        // Actualizar una configuración por ID
+        Route::put('/configs/{id}', [EvolutionApiValueController::class, 'update']);
+        
+        // Eliminar una configuración por ID/clave
+        Route::delete('/configs/{id}', [EvolutionApiValueController::class, 'destroy']);
+    });
+});
+
+

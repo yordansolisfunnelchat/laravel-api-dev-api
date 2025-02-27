@@ -1,5 +1,4 @@
 <?php
-# Agent.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,14 +22,34 @@ class Agent extends Model
         'pause_condition',
         'has_waiting_time',
         'sync_status',
-        'sync_error'
+        'sync_error',
+        // 'sync_attempts'  // Añadido este campo
     ];
 
     protected $casts = [
-        'status' => 'boolean',
         'keywords' => 'array',
-        'has_waiting_time' => 'boolean', // Añadir esta línea
+        'status' => 'boolean',
+        'has_waiting_time' => 'boolean',
+        'sync_attempts' => 'integer'  // Añadido este cast
     ];
+
+    // Relación con el mapping
+    public function mapping()
+    {
+        return $this->hasOne(AgentMapping::class, 'laravel_agent_id');
+    }
+    
+    // Verificar si el agente está sincronizado
+    public function isSynced()
+    {
+        return $this->sync_status === 'synced' && $this->mapping()->exists();
+    }
+    
+    // Verificar si hay intentos de sincronización pendientes
+    public function hasPendingSync()
+    {
+        return in_array($this->sync_status, ['pending', 'pending_async', 'pending_retry']);
+    }
 
     public function shouldActivate(string $message): bool
     {
